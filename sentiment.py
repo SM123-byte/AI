@@ -66,3 +66,20 @@ while True:
     
     conversation_history.append((user, polarity, sentiment_type))
     print(f"{color}{emoji} {sentiment_type} Sentiment Detected! (Polarity:{polarity:.2f}) {Style.RESET_ALL}\n")
+
+if not conversation_history:
+    print("No data collected for this mission!")
+
+else:
+    total = len(conversation_history)
+    pos = sum(1 for x in conversation_history if x[2] == "Positive")
+    neg = sum(1 for x in conversation_history if x[2] == "Negative")
+    neu = sum(1 for x in conversation_history if x[2] == "Neutral")
+
+    print(f"Agent: {user}")
+    print(f"Total Sentence Anaylsed: {total}")
+    print(f"{Fore.GREEN} Positive: {pos}")
+    print(f"{Fore.YELLOW} Neutral: {neu}")
+    print(f"{Fore.RED} Negative: {neg}")
+
+print(f"{Fore.BLUE}Farewell Agent!")
