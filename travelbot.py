@@ -1,5 +1,9 @@
-import re, random
+import re
+import random
 from colorama import Fore, init
+from datetime import datetime
+import pytz
+
 
 # Initialize colorama (autoreset ensures each print resets after use)
 init(autoreset=True)
@@ -16,9 +20,32 @@ jokes = [
     "Why do travelers always feel warm? Because of all their hot spots!"
 ]
 
+city_times = {
+    "tokyo": "Asia/Tokyo",
+    "london": "Europe/London",
+    "new york": "America/New York",
+    "shen zen": "Asia/Shanghai",
+    "bali": "Asia/Makassar",
+    "maldives": "Indian/Maldives",
+    "phuket": "Asia/Bangkok"
+}
+
 # Helper function to normalize user input (remove extra spaces, make lowercase)
 def normalize_input(text):
     return re.sub(r"\s+", " ", text.strip().lower())
+
+def tell_time():
+    print(Fore.CYAN + "Which city's time would you like to know?")
+    print(Fore.LIGHTBLUE_EX + f"Options: {', '.join(city_times.keys()).title()}")
+    city = normalize_input(input(Fore.YELLOW + "You: "))
+
+    if city in city_times:
+        timezone = pytz.timezone(city_times[city])
+        city_now = datetime.now(timezone)
+        time_str = city_now.strftime("%I:%M %p (%Z)")
+        print(Fore.GREEN + f"Travel Bot: The current time in {city.title()} is {time_str}")
+    else:
+        print(Fore.RED + "Sorry! I don't quite understand! I don't think I have the time for that location yet!")
 
 # Provide travel recommendations (recursive if user rejects suggestions)
 def recommend():
@@ -67,6 +94,7 @@ def show_help():
     print(Fore.GREEN + "- Suggest travel spots (say 'recommendation')")
     print(Fore.GREEN + "- Offer packing tips (say 'packing')")
     print(Fore.GREEN + "- Tell a joke (say 'joke')")
+    print(Fore.GREEN + "- Tell the city times for the travel destination (say 'time')")
     print(Fore.CYAN + "Type 'exit' or 'bye' to end.\n")
 
 # Main chat loop
@@ -83,6 +111,8 @@ def chat():
         
         if "recommend" in user_input or "suggest" in user_input:
             recommend()
+        elif "time" in user_input or "clock" in user_input:
+            tell_time()
         elif "pack" in user_input or "packing" in user_input:
             packing_tips()
         elif "joke" in user_input or "funny" in user_input:
